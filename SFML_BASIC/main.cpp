@@ -26,6 +26,48 @@
 #include "Camera.h"
 #include <SFML/Window/ContextSettings.hpp>
 
+//0 = grass, 1 = snow, 2 = water
+GLuint m_textures[3];
+
+void LoadTextures()
+{
+
+
+
+	sf::Image waterImg;
+	sf::Image snowImg;
+	sf::Image grassImg;
+	grassImg.loadFromFile("Textures/dirt_grass.png");
+	snowImg.loadFromFile("Textures/snow.jpg");
+	waterImg.loadFromFile("Textures/water.jpg");
+	//terrainImg.loadFromFile("Textures/heightmap.png");
+
+
+
+	sf::Texture* m_terrainTex;
+
+
+
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(3, m_textures);
+
+	glBindTexture(GL_TEXTURE_2D, m_textures[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, grassImg.getSize().x, grassImg.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, grassImg.getPixelsPtr());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, m_textures[1]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, snowImg.getSize().x, snowImg.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, snowImg.getPixelsPtr());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, m_textures[2]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, waterImg.getSize().x, waterImg.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, waterImg.getPixelsPtr());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+}
 
 
 
@@ -43,6 +85,9 @@ int main()
 	aiVector3D position(0, 10,-30);
 	Camera camera;
     camera.Init(position); //create a camera
+
+	LoadTextures();
+	
       
     //prepare OpenGL surface for HSR 
     glClearDepth(1.f); 
@@ -58,26 +103,6 @@ int main()
     gluPerspective(90.f, (float)width/height, 1.f, 300.0f);//fov, aspect, zNear, zFar 
  
 
-
-
-	sf::Image terrainImg;
-	terrainImg.loadFromFile("Textures/dirt_grass.png");
-	//terrainImg.loadFromFile("Textures/heightmap.png");
-
-
-
-	sf::Texture* m_terrainTex;
-	GLuint m_textures[1];
-
-
-
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, m_textures);
-
-	glBindTexture(GL_TEXTURE_2D, m_textures[0]);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, terrainImg.getSize().x, terrainImg.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, terrainImg.getPixelsPtr());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 
 
@@ -137,7 +162,7 @@ int main()
 		glRotatef(ang*2,0,1,0);//spin about y-axis
 
 
-		glBindTexture(GL_TEXTURE_2D, m_textures[0]);
+		glBindTexture(GL_TEXTURE_2D, m_textures[2]);
 		//draw the world
 		terrain.Draw();
 

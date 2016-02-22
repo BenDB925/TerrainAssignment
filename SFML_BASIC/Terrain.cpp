@@ -142,8 +142,6 @@ void Terrain::Init(){
 void Terrain::Draw(){
 	
 	glBegin(GL_TRIANGLES);
-
-
 	for (int i = 0; i < numVerts; i++)
 	{
 		glTexCoord2f(textureCoords[i][0], textureCoords[i][1]);
